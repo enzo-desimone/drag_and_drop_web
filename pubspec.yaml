@@ -1,0 +1,22 @@
+name: drag_and_drop_web
+description: "The Drag and Drop Web plugin is a Flutter widget enabling drag-and-drop file and directory uploads for web apps."
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  universal_html: ^2.2.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+
