@@ -1,101 +1,201 @@
-# DragAndDropWeb Plugin
+# DragAndDropWeb
 
-**DragAndDropWeb** is a Flutter widget that enables drag-and-drop file and directory uploads for Flutter Web applications. It provides a user-friendly interface with customizable states and browser compatibility handling.
+<p align="left">
+  <img src="./example/drag_and_drop_web.webp" alt="DragAndDropWeb" width="50%" />
+</p>
 
----
+A Flutter widget to **drag & drop files and directories** for **Flutter Web** apps, with customizable UI states and graceful fallbacks for unsupported browsers.
 
-## Features
-
-- **File and Directory Uploads**: Drag and drop individual files or entire directories (browser support required).
-- **Dynamic UI States**: Reacts to drag-and-drop events (`dragStart`, `dragDone`, etc.).
-- **Browser Compatibility**:
-    - Fully compatible with browsers like **Chrome**, **Edge**, and **Opera**.
-    - Fallback widget for unsupported browsers like **Firefox** and **Safari**.
-- **Customizable Widgets**: Define custom widgets for different drag-and-drop states.
+[![Pub Version](https://img.shields.io/pub/v/drag_and_drop_web?style=flat-square&logo=dart)](https://pub.dev/packages/drag_and_drop_web)
+![Pub Likes](https://img.shields.io/pub/likes/drag_and_drop_web)
+![Pub Points](https://img.shields.io/pub/points/drag_and_drop_web)
+![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)
 
 ---
 
-## Browser Compatibility
+## 📱 Supported Platforms
 
-| Browser   | Compatibility | Notes                                           |
-|-----------|---------------|-------------------------------------------------|
-| Chrome    | ✅            | Fully supported.                               |
-| Edge      | ✅            | Fully supported.                               |
-| Firefox   | ❌            | Directory uploads not supported.               |
-| Safari    | ❌            | Directory uploads not supported.               |
-| Opera     | ✅            | Fully supported.                               |
+| Android | iOS | macOS | Web | Linux | Windows |
+|:-------:|:---:|:-----:|:---:|:-----:|:-------:|
+|   ❌    | ❌   |  ❌   | ✔️   |  ❌   |   ❌    |
 
-For unsupported browsers, a custom `notCompatibleWidget` can be displayed.
+> This package is designed for **Flutter Web**. It can be included in multi-platform projects, but drag-and-drop functionality is only available on the Web.
 
 ---
 
-## Setup Instructions
+## 🔍 Overview
 
-### 1. Add to `index.html`
+`drag_and_drop_web` provides a simple, extensible API to accept **file** and **directory** drops inside your Flutter Web app. It offers:
 
-To ensure drag-and-drop works correctly, update your `index.html` file:
-
-1. Open the `web/index.html` file.
-2. Add the following attributes and script to enable `webkitGetAsEntry` for drag-and-drop functionality:
-   ```html
-   <body ondragover="event.preventDefault();" ondrop="event.preventDefault();">
-     <script>
-       HTMLElement.prototype.webkitGetAsEntry = function () {
-         return this.webkitGetAsEntry ? this.webkitGetAsEntry() : null;
-       };
-     </script>
-   </body>
-   ```
-3. Example:
-   ```html
-   <!DOCTYPE html>
-   <html>
-   <head>
-     <meta charset="UTF-8">
-     <title>Drag and Drop Demo</title>
-   </head>
-   <body ondragover="event.preventDefault();" ondrop="event.preventDefault();">
-     <script>
-       HTMLElement.prototype.webkitGetAsEntry = function () {
-         return this.webkitGetAsEntry ? this.webkitGetAsEntry() : null;
-       };
-     </script>
-     <script src="main.dart.js" type="application/javascript"></script>
-   </body>
-   </html>
-   ```
+- ✅ **File & Directory** drops (directory support depends on the browser)
+- ✅ **Customizable UI states** for drag start/over/done
+- ✅ **Fallback widget** for browsers without directory support
+- ✅ Minimal setup: small `index.html` snippet
 
 ---
 
-## Class: DragAndDropWeb
+## ⚙️ Installation
 
-This is the main widget for integrating drag-and-drop functionality.
+Add the dependency:
 
-### Properties
+```yaml
+dependencies:
+  drag_and_drop_web: ^latest
+```
 
-| Property              | Type                                 | Description                                                                                   |
-|-----------------------|--------------------------------------|-----------------------------------------------------------------------------------------------|
-| `child`               | `Widget`                            | The default widget displayed when no drag operation is in progress.                          |
-| `onDragWidget`        | `Widget`                            | The widget displayed when a drag operation starts.                                           |
-| `onDragDone`          | `Widget`                            | The widget displayed when a drag operation completes successfully.                           |
-| `notCompatibleWidget` | `Widget`                            | The widget displayed if the browser does not support directory drag-and-drop.                |
-| `onUploadFile`        | `Future<void> Function(html.File)`   | Callback function to handle each uploaded file.                                              |
+Then run:
 
----
-
-## Example Project
-
-A fully functional example project demonstrating the use of `DragAndDropWeb` can be found in the [example](./example) directory.
+```bash
+flutter pub get
+```
 
 ---
 
-## Contribution
+## 🚀 Quick Start
 
-Contributions are welcome! If you find a bug or have a feature request, please open an issue or submit a pull request.
+### 1) Import
+
+```dart
+import 'package:drag_and_drop_web/drag_and_drop_web.dart';
+```
+
+### 2) Minimal usage
+
+```dart
+DragAndDropWeb(
+  child: Text("Drop files here"),
+  onDragWidget: Text("Drop now!"),
+  onDragDone: Text("Upload complete"),
+  notCompatibleWidget: Text("Your browser is not supported"),
+  onUploadFile: (file) async {
+    print("Uploaded: ${file.name}");
+  },
+);
+```
 
 ---
 
-## License
+## 🌐 Browser Compatibility
 
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+| Browser   | Compatibility | Notes                           |
+|-----------|---------------|---------------------------------|
+| Chrome    | ✅            | Full support                    |
+| Edge      | ✅            | Full support                    |
+| Opera     | ✅            | Full support                    |
+| Firefox   | ⚠️            | No directory support            |
+| Safari    | ⚠️            | No directory support            |
 
+For unsupported cases, set a custom `notCompatibleWidget` to guide your users.
+
+---
+
+## 🧩 Setup (`web/index.html`)
+
+Add these to your `web/index.html` to ensure drag-and-drop works properly and to enable `webkitGetAsEntry` (for directory entries in supported browsers):
+
+```html
+<body ondragover="event.preventDefault();" ondrop="event.preventDefault();">
+  <script>
+    HTMLElement.prototype.webkitGetAsEntry = function () {
+      return this.webkitGetAsEntry ? this.webkitGetAsEntry() : null;
+    };
+  </script>
+  <script src="main.dart.js" type="application/javascript"></script>
+</body>
+```
+
+---
+
+## 📘 API Reference
+
+### Widget: `DragAndDropWeb`
+
+| Property              | Type                                 | Description                                                                 |
+|-----------------------|--------------------------------------|-----------------------------------------------------------------------------|
+| `child`               | `Widget`                             | Default widget when no drag operation is in progress.                       |
+| `onDragWidget`        | `Widget`                             | Widget displayed when a drag operation starts/hover.                        |
+| `onDragDone`          | `Widget`                             | Widget displayed when a drag operation completes.                           |
+| `notCompatibleWidget` | `Widget`                             | Widget displayed if the browser lacks directory drag-and-drop support.      |
+| `onUploadFile`        | `Future<void> Function(html.File)`   | Callback invoked for each dropped file.                                     |
+
+> The widget manages the drag lifecycle (`dragStart`, `dragOver`, `dragLeave`, `dragDone`) internally and swaps UI based on the current state.
+
+---
+
+## 🔄 Complete Example
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:drag_and_drop_web/drag_and_drop_web.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Drag & Drop Demo',
+      home: const DemoPage(),
+    );
+  }
+}
+
+class DemoPage extends StatelessWidget {
+  const DemoPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Drag & Drop (Web)")),
+      body: Center(
+        child: DragAndDropWeb(
+          child: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text("Drop files or directories here"),
+          ),
+          onDragWidget: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text("Release to upload"),
+          ),
+          onDragDone: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text("Upload complete"),
+          ),
+          notCompatibleWidget: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text("Your browser does not support directory drops"),
+          ),
+          onUploadFile: (file) async {
+            // Handle the file (e.g., read bytes, upload, etc.)
+            debugPrint("Received: ${file.name} (${file.size} bytes)");
+          },
+        ),
+      ),
+    );
+  }
+}
+```
+
+---
+
+## 💡 Common Use Cases
+
+- 📂 **Bulk uploads** from folders
+- 🧩 **Custom dropzones** inside complex UIs
+- 🧪 **Drag-state driven UI** (e.g., highlight drop area on hover)
+- 🧭 **Cross-browser experience** with graceful degradation
+
+---
+
+## 🤝 Contributing
+
+Issues and pull requests are welcome!  
+→ Open an issue • Submit a PR
+
+---
+
+## 📃 License
+
+MIT — See [LICENSE](./LICENSE)
